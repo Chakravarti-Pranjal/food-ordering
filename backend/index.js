@@ -3,7 +3,8 @@ import { config } from "dotenv";
 import cors from "cors";
 import connectDB from "./src/config/connectDB.js";
 import cookieParser from "cookie-parser";
-import mainRouter from "./src/routes/mainRooutes.js";
+import mainRouter from "./src/routes/mainRoute.js";
+
 config();
 
 const app = express();
@@ -19,10 +20,18 @@ app.use(
 
 app.use("/api/v1", mainRouter);
 
+app.get("/", (req, res) => {
+  res.send("Hello world");
+});
+
 // error middleware
 app.use((err, req, res, next) => {
-  console.log("Error : ", err.message);
-  next();
+  console.error("Error:", err.message);
+
+  return res.status(err.statusCode || 500).json({
+    success: false,
+    message: err.message || "Internal Server Error",
+  });
 });
 
 app.listen(Port, async () => {

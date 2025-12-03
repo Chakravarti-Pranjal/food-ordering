@@ -22,6 +22,16 @@ const userSchema = new Schema(
       type: String,
       enum: ["user", "owner", "deliveryBoy"],
     },
+    resetOtp: {
+      type: String,
+    },
+    isOtpVerified: {
+      type: Boolean,
+      default: false,
+    },
+    otpExpires: {
+      type: Date,
+    },
   },
   {
     timestamps: true,
