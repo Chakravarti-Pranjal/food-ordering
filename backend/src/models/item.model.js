@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose, { Schema } from "mongoose";
 
 const itemSchmea = new Schema(
   {
@@ -45,5 +45,5 @@ const itemSchmea = new Schema(
   { timestamps: true }
 );
 
-const Item = mongoose.Model("Item", itemSchmea);
+const Item = mongoose.model("Item", itemSchmea);
 export default Item;

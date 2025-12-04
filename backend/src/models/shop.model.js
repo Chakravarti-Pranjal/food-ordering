@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose, { Schema } from "mongoose";
 
 const shopSchema = new Schema(
   {
@@ -8,7 +8,7 @@ const shopSchema = new Schema(
     },
     image: {
       type: String,
-      tequired: true,
+      required: true,
     },
     owner: {
       type: mongoose.Schema.Types.ObjectId,
@@ -36,5 +36,5 @@ const shopSchema = new Schema(
   { timestamps: true }
 );
 
-const Shop = mongoose.Model("Shop", shopSchema);
+const Shop = mongoose.model("Shop", shopSchema);
 export default Shop;
