@@ -1,17 +1,20 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import { FaArrowCircleLeft } from "react-icons/fa";
 import { ImSpoonKnife } from "react-icons/im";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import { baseUrl, notifySuccess } from "../config/config";
 import { setShopData } from "../redux/slices/ownerSlice";
+import { ClipLoader } from "react-spinners";
 import useFetchShop from "../hooks/useFetchShop";
 
-const AddItem = () => {
+const EditItem = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { shopData } = useSelector((state) => state.owner);
+  const { itemId } = useParams();
+  const [currItem, setCurrItem] = useState(null);
+  const [loading, setLoading] = useState(false);
   const [form, setForm] = useState({
     name: "",
     price: "",
@@ -35,7 +38,6 @@ const AddItem = () => {
 
   const [frontImg, setFrontImg] = useState(null);
   const [backImg, setBackImg] = useState(null);
-
   const { refetchShop } = useFetchShop();
 
   const handleChange = (e) => {
@@ -53,9 +55,42 @@ const AddItem = () => {
     setFrontImg(URL.createObjectURL(file));
   };
 
+  useEffect(() => {
+    const fetchItem = async () => {
+      try {
+        const { data } = await axios.get(`${baseUrl}/item/${itemId}`, {
+          withCredentials: true,
+        });
+
+        if (data?.success == true) {
+          setCurrItem(data?.data);
+          notifySuccess("item fetched");
+        }
+      } catch (error) {
+        console.log("Error in fetching item", error);
+      }
+    };
+
+    fetchItem();
+  }, [itemId]);
+
+  useEffect(() => {
+    if (currItem) {
+      setForm({
+        name: currItem?.name,
+        price: currItem?.price,
+        category: currItem?.category,
+        foodType: currItem?.foodType,
+      });
+
+      setFrontImg(currItem?.image);
+    }
+  }, [currItem]);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      setLoading(true);
       const formData = new FormData();
       formData.append("name", form.name);
       formData.append("price", form.price);
@@ -65,18 +100,20 @@ const AddItem = () => {
         formData.append("image", backImg);
       }
 
-      const { data } = await axios.post(`${baseUrl}/item/add`, formData, {
+      const { data } = await axios.post(`${baseUrl}/item/${itemId}`, formData, {
         withCredentials: true,
       });
       console.log(data);
       if (data?.success) {
         dispatch(setShopData(data?.data));
-        notifySuccess("item added successfully!");
+        notifySuccess("item updated successfully!");
+        setLoading(false);
         refetchShop();
         navigate("/");
       }
     } catch (error) {
       console.log("Error", error);
+      setLoading(false);
     }
   };
 
@@ -101,9 +138,7 @@ const AddItem = () => {
                   w-16 h-16"
             />
           </div>
-          <div className="text-3xl font-extrabold text-gray-900">
-            Add Food Item
-          </div>
+          <div className="text-3xl font-extrabold text-gray-900">Edit Item</div>
         </div>
 
         <form className="space-y-5" onSubmit={handleSubmit}>
@@ -148,7 +183,7 @@ const AddItem = () => {
             <input
               type="number"
               min={0}
-              value={form.pice}
+              value={form.price}
               name="price"
               onChange={handleChange}
               placeholder="Enter Price"
@@ -194,8 +229,9 @@ const AddItem = () => {
           <button
             type="submit"
             className="bg-[#ff4d2d] text-white px-5 sm:px-6 py-2 rounded-lg font-medium shadow-md hover:bg-orange-600 transition-colors duration-200 cursor-pointer w-full"
+            disabled={loading}
           >
-            Save
+            {loading ? <ClipLoader size={20} color="white" /> : "Update"}
           </button>
         </form>
       </div>
@@ -203,4 +239,4 @@ const AddItem = () => {
   );
 };
 
-export default AddItem;
+export default EditItem;

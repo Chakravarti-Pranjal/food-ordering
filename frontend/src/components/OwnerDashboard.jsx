@@ -44,7 +44,7 @@ const OwnerDashboard = () => {
           <h1 className="text-2xl sm:text-3xl text-gray-900 flex items-center gap-3 mt-8 text-center">
             <ImSpoonKnife
               size={25}
-              className="text-[#ff4d2d] w-16 h-16  mb-4"
+              className="text-[#ff4d2d]  w-10 h-10 md:w-16 md:h-16  mb-4"
             />
             Welcome to {shopData?.name}
           </h1>
@@ -72,7 +72,7 @@ const OwnerDashboard = () => {
         </div>
       )}
 
-      {shopData?.items.length == 0 && (
+      {shopData?.items?.length == 0 && (
         <div className="flex justify-center items-center p-4 sm:p-6">
           <div className="w-full max-w-md bg-white shadow-lg rounded-2xl p-6 border border-gray-100 hover:shadow-xl transition-shadow dureation-300">
             <div className="flex flex-col items-center text-center">
@@ -98,11 +98,19 @@ const OwnerDashboard = () => {
         </div>
       )}
 
-      {shopData.items.length > 0 && (
-        <div className="flex md:flex-row flex-col items-center gap-4 w-full max-w-3xl py-8 ">
-          {shopData.items.map((item, index) => (
-            <ItemCard data={item} key={item.id} />
-          ))}
+      {shopData?.items?.length > 0 && (
+        <div className="w-full max-w-3xl py-8 relative mb">
+          <button
+            className="bg-[#ff4d2d] text-white px-5 sm:px-6 py-2 rounded-full font-medium shadow-md hover:bg-orange-600 transition-colors duration-200 cursor-pointer absolute top-2 right-0"
+            onClick={() => navigate("/add-item")}
+          >
+            Add Food
+          </button>
+          <div className="w-full mt-6 flex md:flex-row flex-col items-center gap-4 ">
+            {shopData.items.map((item, index) => (
+              <ItemCard item={item} key={item.id} />
+            ))}
+          </div>
         </div>
       )}
     </div>

@@ -9,7 +9,7 @@ import axios from "axios";
 import { setUserData } from "../redux/slices/userSlice";
 import { FaPlus } from "react-icons/fa";
 import { FaBell } from "react-icons/fa";
-import {useNavigate} from 'react-router-dom'
+import { useNavigate } from "react-router-dom";
 
 const Nav = () => {
   const { userData, city } = useSelector((state) => state.user);
@@ -18,6 +18,7 @@ const Nav = () => {
   const [showSearch, setShowSearch] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { cartItems } = useSelector((state) => state.user);
 
   const handleLogout = async () => {
     try {
@@ -37,7 +38,9 @@ const Nav = () => {
 
   return (
     <div
-      className={`w-full md:max-w-3xl h-full flex items-center justify-between  gap-[30px] px-[20px] sticky top-0 z-[999] bg-[#fff9f6] overflow-visible relative`}
+      className={`w-full  h-full flex items-center justify-between  gap-[30px] px-[20px] sticky top-0 z-[999] bg-[#fff9f6] overflow-visible relative ${
+        userData.role == "user" ? "md:max-w-6xl" : "md:max-w-3xl"
+      }`}
     >
       {showSearch && userData.role == "user" && (
         <div className="w-11/12 flex  h-[70px] bg-white shadow-xl rounded-lg items-center gap-[20px] absolute top-14 mx-auto justify-center">
@@ -89,7 +92,10 @@ const Nav = () => {
         {userData.role == "owner" && (
           <>
             {shopData && (
-              <button className="flex items-center gap-1  p-2 rounded-full  md:rounded-lg bg-[#ff4d2d]/10 text-[#ff4d2d] text-sm font-medium cursor-pointer" onClick={()=>navigate('/add-item')}>
+              <button
+                className="flex items-center gap-1  p-2 rounded-full  md:rounded-lg bg-[#ff4d2d]/10 text-[#ff4d2d] text-sm font-medium cursor-pointer"
+                onClick={() => navigate("/add-item")}
+              >
                 <FaPlus size={20} />
                 <span className="hidden md:block">Add Item</span>
               </button>
@@ -105,10 +111,13 @@ const Nav = () => {
         )}
 
         {userData.role == "user" && (
-          <div className="relative cursor-pointer">
+          <div
+            className="relative cursor-pointer"
+            onClick={() => navigate("/cart")}
+          >
             <FaShoppingCart size={25} className="text-[#ff4d2d]" />
             <span className="absolute right-[-9px] top-[-12px] text-[#ff4d2d]">
-              0
+              {cartItems.length > 0 ? cartItems.length : 0}
             </span>
           </div>
         )}
@@ -133,9 +142,11 @@ const Nav = () => {
                 {userData?.fullName}
               </div>
 
-              <div className="md:hidden text-[#ff4d2d] font-semibold cursor-pointer">
-                My Orders
-              </div>
+              {userData.role == "user" && (
+                <div className="md:hidden text-[#ff4d2d] font-semibold cursor-pointer">
+                  My Orders
+                </div>
+              )}
 
               <button
                 className="text-[#ff4d2d] font-semibold cursor-pointer text-start"
