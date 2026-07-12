@@ -1,4 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { getMyOrders } from "../../../../backend/src/controllers/orderController";
 
 const initialState = {
   userData: null,
@@ -9,6 +10,7 @@ const initialState = {
   itemsInMyCity: null,
   cartItems: [],
   totalAmout: 0,
+  getMyOrders: null,
 };
 
 const userSlice = createSlice({
@@ -68,6 +70,10 @@ const userSlice = createSlice({
         0
       );
     },
+
+    setMyOrders: (state, action) => {
+      state.getMyOrders = action.payload;
+    }
   },
 });
 
@@ -81,5 +87,6 @@ export const {
   addToCart,
   updateQuantity,
   removeCartItem,
+  setMyOrders
 } = userSlice.actions;
 export default userSlice.reducer;

@@ -5,7 +5,9 @@ const shopOrderItemSchema = new Schema(
     item: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Item",
+      required : true,
     },
+    name: String,
     price: Number,
     quantity: Number,
   },

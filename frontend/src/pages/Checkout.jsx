@@ -13,6 +13,7 @@ import { setCurrentAddress, setLocation } from "../redux/slices/mapSlice";
 import axios from "axios";
 import { MdDeliveryDining } from "react-icons/md";
 import { FaMoneyCheck } from "react-icons/fa";
+import { baseUrl, notifyError, notifySuccess } from "../config/config";
 
 
 function RecenterMap({ location }) {
@@ -86,6 +87,32 @@ const [paymentMethod, setPaymentMethod] = useState("cod");
       console.error("Error fetching location by address:", error);
     }
   }
+
+
+  const handlePlaceOrder = async () => {
+    try {
+      const { data } = await axios.post(`${baseUrl}/order/place-order`, {
+        cartItem: cartItems,
+        paymentMethod,
+        deliveryAddress: {
+          text: searchLocation,
+          latitude: location.lat,
+          longitude: location.lon
+        },
+        totalAmount: totalPayable
+      }, { withCredentials: true });
+
+      console.log(data);
+      if(data.success){
+        notifySuccess("Order placed successfully!");
+        navigate("/order-placed");
+      }else{
+        notifyError(data.message || "Failed to place order!");
+      }
+    } catch (error) {
+      console.error("Error placing order:", error);
+    }
+  };
 
 
   return (
@@ -186,7 +213,7 @@ const [paymentMethod, setPaymentMethod] = useState("cod");
         </div>
       </section>
 
-      <button className="w-full bg-[#ff4d2d] text-white py-3 rounded-xl font-semibold hover:bg-[#ff4d2d]/90 transition mt-3">
+      <button className="w-full bg-[#ff4d2d] text-white py-3 rounded-xl font-semibold hover:bg-[#ff4d2d]/90 transition mt-3" onClick={handlePlaceOrder}>
         {paymentMethod === "cod" ? "Place Order" : "Proceed to Pay"}
       </button>
 

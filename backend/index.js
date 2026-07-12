@@ -13,14 +13,14 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: ["http://localhost:5173", "https://lovingo.duckdns.org/"],
     credentials: true,
   })
 );
 
 app.use("/api/v1", mainRouter);
 
-app.get("/", (req, res) => {
+app.get("/api", (req, res) => {
   res.send("Hello world");
 });
 

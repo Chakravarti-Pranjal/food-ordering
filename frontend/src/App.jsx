@@ -17,6 +17,8 @@ import useFetchShopByCity from "./hooks/useFetchShopByCity.jsx";
 import useFetchItemsByCity from "./hooks/useFetchItemsByCity.jsx";
 import CartPage from "./pages/CartPage.jsx";
 import Checkout from "./pages/Checkout.jsx";
+import OrderPlaced from "./pages/OrderPlaced.jsx";
+import MyOrder from "./pages/MyOrder.jsx";
 
 const App = () => {
   useCurrentUser();
@@ -50,6 +52,8 @@ const App = () => {
           <Route path="/edit-item/:itemId" element={<EditItem />} />
           <Route path="/cart" element={<CartPage />} />
           <Route path="/checkout" element={<Checkout />} />
+          <Route path="/order-placed" element={<OrderPlaced />} />
+          <Route path="/my-orders" element={<MyOrder />} />
         </Route>
       </Routes>
     </BrowserRouter>
