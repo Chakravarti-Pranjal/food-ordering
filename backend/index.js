@@ -20,7 +20,7 @@ app.use(
 
 app.use("/api/v1", mainRouter);
 
-app.get("/api", (req, res) => {
+app.get("/api/v1/health", (req, res) => {
   res.send("Hello world");
 });
 
